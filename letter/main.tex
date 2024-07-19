@@ -1,0 +1,61 @@
+%% Project:  WestlakeU-LaTeX
+%% main.tex - Letter main template
+%% content.tex - Body of the letter
+
+\documentclass[12pt]{letter}
+\usepackage{../style/westlakeu}
+\usepackage{geometry}
+\usepackage{eso-pic}
+\usepackage{lipsum}
+
+%% ---- Personal information ----
+\newcommand{\sender}{Kairos Wong}
+\newcommand{\recipient}{Prof. XXX}
+\newcommand{\university}{Westlake University}
+\newcommand{\street}{600 Dunyu Rd., Xihu District, Hangzhou}
+\newcommand{\city}{Zhejiang}
+\newcommand{\country}{PR China}
+\newcommand{\zip}{310000}
+\newcommand{\email}{xxx@xxx.edu.cn}
+
+\geometry{a4paper, margin=1in}
+\pagestyle{empty}
+
+\begin{document}
+%% ---- Letter header ----
+\begin{flushleft}
+    \vspace{0.1in}
+    \includegraphics[width=2in]{../assets/logo.png}
+    \vspace{0.1in}
+\end{flushleft}
+\vspace{-0.3in}
+\rule{\linewidth}{1.5pt}
+
+%% ---- Contact information ----
+\begin{flushright}
+\today \\
+\vspace{0.1in}
+\sender \\
+Email: \href{mailto:\email}{\email} \\
+\street \\
+\city, \country, \zip \\
+\end{flushright}
+
+%% ---- Main body ----
+\begin{flushleft}
+Dear \recipient,
+\end{flushleft}
+
+{\setlength{\parindent}{20pt}
+\input{content}}
+
+%% ---- Closing ----
+\vfill
+\begin{flushleft}
+Kind Regards, \\
+\vspace{0.1in}
+\includegraphics[width=3in]{../assets/sign.jpg} \\
+\vspace{0.1in}
+School of Engineering, \university \\
+\end{flushleft}
+\end{document}

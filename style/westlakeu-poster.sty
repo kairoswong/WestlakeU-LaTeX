@@ -1,0 +1,236 @@
+%% WestlakeU Poster Theme
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{westlakeu-poster}[2026/05/30 v1.0 WestlakeU Poster Theme]
+
+%% ===================================================================
+%%                         CONVENTIONS
+%%
+%%   Colour naming: wl-{hue}{shade}
+%%     Hue:   blue, orange, green
+%%     Shade: 100 = pure, 70 -> 50 -> 30 -> 15 -> 10 = lightest
+%%   Aliases: westlakeblue / lightblue / lightorange  (poster compat)
+%% ===================================================================
+
+\RequirePackage{westlakeu}
+
+%% ===================================================================
+%% 1  PACKAGES
+%% ===================================================================
+
+\RequirePackage{exscale}
+\RequirePackage{ragged2e}
+\RequirePackage{changepage}
+\RequirePackage{fontspec}
+\RequirePackage{xeCJK}
+\RequirePackage{calc}
+
+%% ===================================================================
+%% 2  COLOUR SETTINGS
+%% ===================================================================
+
+\setbeamercolor{palette primary}          {fg=black,bg=white}
+\setbeamercolor{palette secondary}        {fg=black,bg=white}
+\setbeamercolor{palette tertiary}         {fg=white,bg=black}
+\setbeamercolor{palette quaternary}       {fg=black,bg=white}
+\setbeamercolor{structure}                {fg=westlakeblue}
+\setbeamercolor{headline}                 {fg=white,bg=wl-blue100}
+\setbeamercolor{headline rule}            {parent=palette tertiary}
+\setbeamercolor{block title}              {fg=wl-blue100,bg=white}
+\setbeamercolor{block separator}          {bg=black}
+\setbeamercolor{block body}               {fg=black,bg=white}
+\setbeamercolor{block alerted title}      {fg=wl-blue100,bg=lightorange}
+\setbeamercolor{block alerted separator}  {bg=black}
+\setbeamercolor{block alerted body}       {fg=black,bg=lightorange}
+\setbeamercolor{block example title}      {fg=wl-blue100,bg=lightblue}
+\setbeamercolor{block example separator}  {bg=black}
+\setbeamercolor{block example body}       {fg=black,bg=lightblue}
+\setbeamercolor{heading}                  {fg=black}
+\setbeamercolor{item}                     {fg=wl-blue100}
+\setbeamercolor{bibliography item}        {fg=black}
+\setbeamercolor{bibliography entry author}{fg=black}
+\setbeamercolor{bibliography entry title} {fg=black}
+\setbeamercolor{bibliography entry location}{fg=black}
+\setbeamercolor{bibliography entry note}  {fg=black}
+
+%% ===================================================================
+%% 3  FONTS
+%% ===================================================================
+
+\usefonttheme{professionalfonts}
+
+\IfFontExistsTF{Arial}{%
+  \setsansfont{Arial}
+  \setmainfont{Arial}
+}{%
+  \setsansfont{TeX Gyre Heros}
+}
+
+\setbeamerfont{headline title}     {size=\Huge,series=\bfseries}
+\setbeamerfont{headline author}    {size=\Large}
+\setbeamerfont{headline institute} {size=\normalsize}
+\setbeamerfont{block title}        {size=\large,series=\bfseries}
+\setbeamerfont{heading}            {series=\bfseries}
+\setbeamerfont{caption}            {size=\small}
+\setbeamerfont{footline}           {size=\normalsize}
+
+%% ---- CJK fonts ----
+\IfFontExistsTF{Microsoft YaHei}{%
+  \setCJKmainfont{Microsoft YaHei}
+  \setCJKsansfont{Microsoft YaHei}
+}{%
+  \IfFontExistsTF{Noto Sans CJK SC}{%
+    \setCJKmainfont{Noto Sans CJK SC}
+    \setCJKsansfont{Noto Sans CJK SC}
+  }{}%
+}
+
+%% ===================================================================
+%% 4  GENERAL TEMPLATES
+%% ===================================================================
+%%
+%% Shared helpers and base beamer template overrides.
+
+\newcommand{\samelineand}{\qquad}
+
+% List spacing
+\def\@listi{\leftmargin\leftmarginii
+            \topsep 1ex
+            \parsep 0\p@ \@plus\p@
+            \itemsep 0.5ex}
+
+% Itemize / enumerate icons
+\setbeamertemplate{itemize item}         {\raise0.5ex\hbox{\vrule width 0.5ex height 0.5ex}}
+\setbeamertemplate{itemize subitem}      {\raise0.3ex\hbox{\vrule width 0.5ex height 0.5ex}}
+\setbeamertemplate{itemize subsubitem}   {\raise0.2ex\hbox{\vrule width 0.5ex height 0.5ex}}
+\setbeamertemplate{enumerate item}       {\insertenumlabel.}
+\setbeamertemplate{enumerate subitem}    {\insertsubenumlabel.}
+\setbeamertemplate{enumerate subsubitem} {\insertsubsubenumlabel.}
+
+\setlength\belowdisplayshortskip{2ex}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}[period]
+\setlength{\abovecaptionskip}{2ex}
+\setlength{\belowcaptionskip}{1ex}
+\setbeamertemplate{bibliography item}[text]
+\beamertemplatenavigationsymbolsempty
+
+%% ===================================================================
+%% 5  COMPONENTS
+%% ===================================================================
+
+%% ---- 5.1  Heading ----
+\newcommand\heading[1]{%
+  \par\bigskip
+  {\usebeamerfont{heading}\usebeamercolor[fg]{heading}#1}\par\smallskip}
+
+%% ---- 5.2  Logo dimensions ----
+\newlength{\logoleftwidth}   \setlength{\logoleftwidth}{0cm}
+\newlength{\logorightwidth}  \setlength{\logorightwidth}{0cm}
+\newlength{\maxlogowidth}    \setlength{\maxlogowidth}{0cm}
+
+\newcommand{\logoright}[1]{%
+  \newcommand{\insertlogoright}{#1}%
+  \settowidth{\logorightwidth}{\insertlogoright}%
+  \addtolength{\logorightwidth}{2cm}%
+  \setlength{\maxlogowidth}{\maxof{\logoleftwidth}{\logorightwidth}}}
+\newcommand{\logoleft}[1]{%
+  \newcommand{\insertlogoleft}{#1}%
+  \settowidth{\logoleftwidth}{\insertlogoleft}%
+  \addtolength{\logoleftwidth}{2cm}%
+  \setlength{\maxlogowidth}{\maxof{\logoleftwidth}{\logorightwidth}}}
+
+%% ---- 5.3  Headline (three-column: logo-left | title+author+institute | logo-right) ----
+\setbeamertemplate{headline}{%
+  \begin{beamercolorbox}{headline}
+    \begin{columns}
+      \begin{column}{\maxlogowidth}
+        \vskip5ex\vspace*{\fill}%
+        \ifdefined\insertlogoleft
+          \hspace{2cm}\raggedright\insertlogoleft\vspace*{\fill}%
+        \fi
+      \end{column}
+      \begin{column}{\dimexpr\paperwidth-\maxlogowidth-\maxlogowidth}
+        \usebeamerfont{headline}\vskip3ex\centering
+        \ifx\inserttitle\empty\else
+          {\usebeamerfont{headline title}\usebeamercolor[fg]{headline title}\inserttitle\\[0.5ex]}\fi
+        \ifx\beamer@shortauthor\empty\else
+          {\usebeamerfont{headline author}\usebeamercolor[fg]{headline author}\insertauthor\\[1ex]}\fi
+        \ifx\insertinstitute\empty\else
+          {\usebeamerfont{headline institute}\usebeamercolor[fg]{headline institute}\insertinstitute\\[1ex]}\fi
+      \end{column}
+      \begin{column}{\maxlogowidth}
+        \vskip5ex\vspace*{\fill}%
+        \ifdefined\insertlogoright
+          \raggedleft\insertlogoright\hspace{1cm}\vspace*{\fill}%
+        \fi
+      \end{column}
+    \end{columns}
+    \vspace{5ex}
+    \ifbeamercolorempty[bg]{headline rule}{}{%
+      \begin{beamercolorbox}[wd=\paperwidth,colsep=0.5ex]{headline rule}\end{beamercolorbox}}%
+  \end{beamercolorbox}}
+
+%% ---- 5.4  Block environments ----
+%%
+%% \wl@blockbegin{title-colour}{separator-colour}{body-colour}
+%%   Shared helper that renders the block title bar, a thin separator rule,
+%%   and wraps the body content.
+\newcommand{\wl@blockbegin}[3]{%
+  \begin{beamercolorbox}[colsep*=0ex,dp=2ex,center]{#1}
+    \vskip0pt\usebeamerfont{block title}\insertblocktitle\vskip-1.25ex
+    \begin{beamercolorbox}[colsep=0.025ex]{#2}\end{beamercolorbox}
+  \end{beamercolorbox}%
+  {\parskip0pt\par}\usebeamerfont{block body}\vskip-0.5ex
+  \begin{beamercolorbox}[colsep*=0ex]{#3}
+    \justifying\setlength{\parskip}{1ex}\vskip-2ex}
+
+\setbeamertemplate{block begin}{\wl@blockbegin{block title}{block separator}{block body}}
+\setbeamertemplate{block end}{\end{beamercolorbox}\vskip0pt\vspace*{2ex}}
+
+\setbeamertemplate{block alerted begin}{%
+  \wl@blockbegin{block alerted title}{block alerted separator}{block alerted body}
+  \begin{adjustwidth}{1ex}{1ex}}
+\setbeamertemplate{block alerted end}{\end{adjustwidth}\vskip1ex\end{beamercolorbox}\vskip0pt\vspace*{2ex}}
+
+\setbeamertemplate{block example begin}{%
+  \wl@blockbegin{block example title}{block example separator}{block example body}
+  \begin{adjustwidth}{1ex}{1ex}}
+\setbeamertemplate{block example end}{\end{adjustwidth}\vskip1ex\end{beamercolorbox}\vskip0pt\vspace*{2ex}}
+
+%% ---- 5.5  Footer ----
+\newcommand{\footercontent}[1]{\newcommand{\insertfootercontent}{#1}}
+\setbeamertemplate{footline}{%
+  \ifdefined\insertfootercontent
+    \begin{beamercolorbox}[vmode]{headline}
+      \ifbeamercolorempty[bg]{headline rule}{}{%
+        \begin{beamercolorbox}[wd=\paperwidth,colsep=0.25ex]{headline rule}\end{beamercolorbox}}%
+      \vspace{1.5ex}%
+      \hspace{\sepwidth}\usebeamerfont{footline}\centering\insertfootercontent\hspace{\sepwidth}%
+      \vspace{1.5ex}%
+    \end{beamercolorbox}%
+  \fi}
+
+%% ===================================================================
+%% 6  ALGORITHM / PSEUDOCODE
+%% ===================================================================
+
+\newcounter{pseudocode}
+\setcounter{pseudocode}{0}
+
+\newenvironment{pseudoalgorithm}[1]{%
+  \refstepcounter{pseudocode}%
+  \noindent\begin{minipage}{\linewidth}%
+  \vspace{1ex}%
+  \hrule height 1.5pt
+  \vspace{0.5ex}%
+  {\centering\bfseries\large Algorithm \thepseudocode: #1\par}%
+  \vspace{0.3ex}%
+  \hrule height 0.5pt
+  \vspace{1ex}%
+}{%
+  \vspace{0.5ex}%
+  \hrule height 1.5pt
+  \end{minipage}%
+}
+

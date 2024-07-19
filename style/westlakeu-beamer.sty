@@ -1,0 +1,235 @@
+%% WestlakeU Beamer Theme
+%% Design inspired by the KIT beamer template
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{westlakeu-beamer}[2026/05/30 v1.0 WestlakeU Beamer Theme]
+
+%% ===================================================================
+%%                         CONVENTIONS
+%%
+%%   Colour naming: wl-{hue}{shade}
+%%     Hue:   blue, orange, green
+%%     Shade: 100 = pure, 70 -> 50 -> 30 -> 15 -> 10 = lightest
+%%   Aliases: westlakeblue / lightblue / lightorange  (poster compat)
+%% ===================================================================
+
+\RequirePackage{westlakeu}
+
+%% ===================================================================
+%% 1  PACKAGES
+%% ===================================================================
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsfonts}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage[absolute,overlay]{textpos}
+\RequirePackage{overpic}
+\RequirePackage{listings}
+
+
+%% ===================================================================
+%% 2  BEAMER SETUP
+%% ===================================================================
+
+\mode<presentation>
+
+%% ---- 2.1  Base colours ----
+\setbeamercolor*{normal text}         {fg=black,bg=white}
+\setbeamercolor*{alerted text}        {fg=wl-orange100}
+\setbeamercolor*{example text}        {fg=black}
+\setbeamercolor*{structure}           {fg=black}
+
+%% ---- 2.2  Palettes ----
+\setbeamercolor*{palette primary}     {fg=black,bg=black!8}
+\setbeamercolor*{palette secondary}   {fg=black,bg=black!8}
+\setbeamercolor*{palette tertiary}    {fg=black,bg=black!8}
+\setbeamercolor*{palette quaternary}  {fg=black,bg=black!8}
+
+%% ---- 2.3  Blocks ----
+\setbeamerfont{block title}           {size=\normalsize}
+\setbeamercolor*{block title}         {fg=white,bg=wl-blue100}
+\setbeamercolor{block title alerted}  {use=alerted text,fg=white,bg=wl-orange100}
+\setbeamercolor*{block title example} {fg=white,bg=wl-green100}
+
+\setbeamercolor*{block body}          {fg=black,bg=wl-blue10}
+\setbeamercolor{block body alerted}   {parent=normal text,bg=wl-orange10}
+\setbeamercolor*{block body example}  {fg=black,bg=wl-green10}
+
+%% ---- 2.4  Item bullets ----
+\setbeamercolor*{item projected}      {fg=white,bg=wl-orange100}
+\setbeamercolor*{itemize item}        {fg=wl-orange70}
+\setbeamercolor*{itemize subitem}     {fg=wl-orange50}
+\setbeamercolor*{itemize subsubitem}  {fg=wl-orange50}
+
+%% ---- 2.5  Frame background ----
+\setbeamercolor*{background canvas}   {bg=black!8}
+\setbeamercolor*{background}          {bg=black!8}
+\AtBeginDocument{\pagecolor{black!8}}
+
+%% ---- 2.6  Global behaviour ----
+\setbeamercovered{invisible}
+\setbeamersize{text margin left=6mm, text margin right=6mm}
+\beamertemplatenavigationsymbolsempty
+
+
+%% ===================================================================
+%% 4  USER COMMANDS
+%% ===================================================================
+
+\def\titleimage#1{\def\@titleimage{#1}}  \titleimage{bauplan}
+\def\supervisor#1{\def\@supervisor{#1}}  \supervisor{}
+
+
+%% ===================================================================
+%% 5  CUSTOMISED TEMPLATES
+%% ===================================================================
+
+%% ---- 5.1  Itemize bullet ----
+\setbeamertemplate{itemize items}{%
+  \begin{pgfpicture}{0mm}{0mm}{1ex}{1ex}
+    {\pgfsetcornersarced{\pgfpoint{.3ex}{.3ex}}
+     \pgfpathmoveto{\pgfpoint{0cm}{1ex}}
+     \pgfpathlineto{\pgfpoint{1ex}{1ex}}
+     \pgfpathlineto{\pgfpoint{1ex}{0cm}}}
+    {\pgfsetcornersarced{\pgfpoint{.3ex}{.3ex}}
+     \pgfpathmoveto{\pgfpoint{1ex}{0cm}}
+     \pgfpathlineto{\pgfpointorigin}
+     \pgfpathlineto{\pgfpoint{0cm}{1ex}}}
+    \color{wl-blue70}
+    \pgfusepath{fill}
+  \end{pgfpicture}%
+}
+
+%% ---- 5.2  Title page ----
+\setbeamertemplate{title page}{%
+  \thispagestyle{empty}
+
+  % Institute bar (dark strip)
+  \begin{textblock*}{\paperwidth}(1mm,42mm)
+    \begin{pgfpicture}{0mm}{0mm}{\paperwidth-2mm}{6mm}
+      \color{black!30}
+      \pgfpathrectangle{\pgfpoint{0mm}{0mm}}{\pgfpoint{\paperwidth-2mm}{6mm}}
+      \pgfusepath{fill}
+      \pgftext[at=\pgfpoint{5mm}{3mm},left,center]{\textcolor{white}{\scriptsize\insertinstitute}}
+    \end{pgfpicture}
+  \end{textblock*}
+
+  % Logo (top-left)
+  \begin{textblock*}{30mm}(6mm,5mm)
+    \includegraphics[width=30mm]{../assets/logo.png}
+  \end{textblock*}
+
+  % Title
+  \begin{textblock*}{120mm}(6mm,26mm)
+    \Large\textbf{\inserttitle}
+  \end{textblock*}
+
+  % Subtitle
+  \begin{textblock*}{120mm}(6mm,33mm)
+    \scriptsize\insertsubtitle
+  \end{textblock*}
+
+  % Author, date & supervisor
+  \begin{textblock*}{120mm}(6mm,37mm)
+    \scriptsize\insertauthor~|~\insertshortdate
+    \ifx\@supervisor\empty\else\qquad Supervisor: \@supervisor\fi
+  \end{textblock*}
+
+  % Background image strip at bottom
+  % Title image
+  \begin{textblock*}{\paperwidth}(1.0mm,48.1mm)
+    \begin{overpic}[width=158mm,height=38.0mm]{\@titleimage}
+      \put(0,0){\begin{pgfpicture}{0mm}{0mm}{2mm}{2mm}
+        \pgfpathmoveto{\pgfpoint{0mm}{2mm}}
+        \pgfpatharc{180}{270}{2mm}
+        \pgfpathlineto{\pgfpoint{2mm}{0mm}}
+        \pgfpathlineto{\pgfpoint{0mm}{0mm}}
+        \pgfpathlineto{\pgfpoint{0mm}{2mm}}
+        \pgfpathclose
+        \color{black!8}\pgfusepath{fill}
+      \end{pgfpicture}}
+    \end{overpic}
+  \end{textblock*}%
+}
+
+%% ---- 5.3  Slide background (rounded white card) ----
+\newlength{\wl@bottom}
+\usebackgroundtemplate{%
+  \setlength{\wl@bottom}{\ifbeamer@plainframe1mm\else4mm\fi}%
+  \begin{pgfpicture}{0mm}{0mm}{\paperwidth}{\paperheight}
+    {\pgfsetcornersarced{\pgfpoint{2mm}{2mm}}
+     \pgfpathmoveto{\pgfpoint{\paperwidth-1mm}{\wl@bottom}}
+     \pgfpathlineto{\pgfpoint{1mm}{\wl@bottom}}
+     \pgfpathlineto{\pgfpoint{1mm}{\paperheight-1mm}}}
+    {\pgfsetcornersarced{\pgfpoint{2mm}{2mm}}
+     \pgfpathmoveto{\pgfpoint{1mm}{\paperheight-1mm}}
+     \pgfpathlineto{\pgfpoint{\paperwidth-1mm}{\paperheight-1mm}}
+     \pgfpathlineto{\pgfpoint{\paperwidth-1mm}{\wl@bottom}}}
+    \color{white}
+    \pgfusepath{fill}
+  \end{pgfpicture}%
+}
+
+%% ---- 5.4  Frame title (left-aligned, logo top-right, auto-numbered) ----
+\setbeamertemplate{frametitle}{%
+  \vspace{2mm}%
+  \vbox{\hsize=12cm\bfseries
+    \ifnum\insertsectionnumber>0\relax
+      \insertsectionnumber
+      \ifnum\insertsubsectionnumber>0\relax.\insertsubsectionnumber\ \fi
+      \enspace
+    \fi
+    \insertframetitle
+  }%
+  \begin{textblock*}{17mm}(140mm,3.5mm)
+    \includegraphics[width=16mm]{../assets/logo.png}
+  \end{textblock*}%
+}
+
+%% ---- 5.5  Headline / footline ----
+\setbeamertemplate{headline}{}
+
+\setbeamertemplate{footline}{%
+  \vskip.4mm
+  \begin{beamercolorbox}[leftskip=.5em,ht=1mm,dp=1.3mm]{section in head/foot}
+    \hspace{1.3em}\usebeamerfont{author in head/foot}%
+    \insertshorttitle~-~\insertshortauthor
+    \hfill\insertshortdate\hspace{30pt}\insertframenumber/\inserttotalframenumber\hspace{4mm}
+  \end{beamercolorbox}%
+}
+
+
+%% ===================================================================
+%% 6  CODE LISTINGS
+%% ===================================================================
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{westlakeu-beamer}{
+    basicstyle=\ttfamily\footnotesize,
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    stringstyle=\color{codepurple},
+    breaklines=true,
+    keepspaces=true,
+    numbers=none,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=none,
+    aboveskip=1em,
+    belowskip=1em,
+    xleftmargin=0pt,
+    resetmargins=true
+}
+\lstset{style=westlakeu-beamer}
+
+\mode<all>
+\endinput

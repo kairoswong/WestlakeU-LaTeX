@@ -1,0 +1,54 @@
+%% Project:  WestlakeU-LaTeX
+%% main.tex - Course report main template
+%% content.tex - Body of the course report
+
+\documentclass[11pt,a4paper]{article}
+\usepackage{../style/westlakeu}
+\usepackage[margin=1in]{geometry}
+\usepackage{indentfirst}
+\usepackage{array}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[style=nature]{biblatex}
+
+%% ---- User information ----
+\renewcommand{\figurename}{Fig.}
+\newcommand{\name}{XXX XXX}
+\newcommand{\ID}{xxxxxx}
+\newcommand{\school}{Westlake University}
+
+\addbibresource{references.bib}
+
+%% ===================================================================
+%% Title page
+%% ===================================================================
+\begin{document}
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.42\textwidth]{../assets/logo.png}
+    \\[2.5cm]
+    \huge \textsc{Subtitle \\ Report}
+    \\[2.5cm]
+    \HRule{0.5pt}
+    \huge \textbf{Primary Title}
+    \HRule{2pt}
+    \\[2.5cm]
+    \Large
+    Name: \name         \\[14pt]
+    Campus ID: \ID      \\[14pt]
+    \school             \\[14pt]
+    \today              \\[10pt]
+\end{titlepage}
+
+%% ===================================================================
+%% Main body
+%% ===================================================================
+\newpage
+\input{content.tex}
+\end{document}

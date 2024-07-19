@@ -1,0 +1,293 @@
+%% ===================================================================
+%% beamer/content.tex - Tutorial slides for the WestlakeU beamer theme
+%% ===================================================================
+
+\begin{frame}
+    \frametitle{Outline}
+    \begin{columns}
+        \begin{column}{1.0\textwidth}
+            \begin{itemize}
+                \item 
+                1. Getting started
+                \item
+                2. Basic elements
+                \begin{itemize}
+                    \item 2.1 Text and lists
+                    \item 2.2 Mathematics
+                    \item 2.3 Blocks
+                    \item 2.4 Tables
+                \end{itemize}
+                \item
+                3. Figures and graphics
+                \item
+                4. Thank you
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+%% ===================================================================
+%% 1. Getting started
+%% ===================================================================
+\section{Getting started}
+\begin{frame}[fragile]{Getting started}
+    \begin{columns}[T]
+        \column{0.95\textwidth}
+            This beamer theme is designed for presentation slides at \textbf{Westlake University}. 
+            The main file \texttt{main.tex} loads the theme and calls \texttt{content.tex}:
+
+            \vspace{2mm}
+            \begin{lstlisting}[language=TeX, basicstyle=\ttfamily\footnotesize, gobble=12]
+            \documentclass[10pt,aspectratio=169]{beamer}
+            \usepackage{../style/westlakeu-beamer}
+            \titleimage{../assets/background.jpg}
+            % ...
+            \begin{document}
+            \frame{\titlepage}
+            \input{content.tex}
+            \end{document}
+            \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+
+%% ===================================================================
+%% 2.1 Text and lists
+%% ===================================================================
+\section{Basic elements}
+\subsection{Text and lists}
+\begin{frame}[fragile]{Text and lists}
+    \begin{columns}[T]
+        \column{0.95\textwidth}
+            Use standard \LaTeX\ commands for text styling:
+
+            \vspace{2mm}
+            \begin{itemize}
+                \item \textbf{Bold} with \texttt{\textbackslash textbf}
+                \item \textit{Italic} with \texttt{\textbackslash textit}
+                \item \textcolor{wl-orange100}{Coloured} with \texttt{\textbackslash textcolor}
+                \item \href{https://www.example.com}{Hyperlinks} with \texttt{\textbackslash href}
+            \end{itemize}
+
+            \vspace{2mm}
+            The \texttt{columns} environment splits a slide into side-by-side areas:
+
+            \vspace{2mm}
+            \begin{lstlisting}[language=TeX, basicstyle=\ttfamily\footnotesize, gobble=12]
+            \begin{columns}[T]
+            \column{0.45\textwidth}
+                left content
+            \column{0.45\textwidth}
+                right content
+            \end{columns}
+            \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+
+%% ===================================================================
+%% 2.2 Mathematics
+%% ===================================================================
+\subsection{Mathematics}
+\begin{frame}[fragile]{Mathematics}
+    \begin{columns}[T]
+        \column{0.45\textwidth}
+            Inline math: \texttt{\$E=mc\textasciicircum 2\$}
+            $\rightarrow$ $E=mc^2$
+
+            \vspace{5mm}
+            Display math:
+            \begin{equation}
+                E=mc^2
+            \end{equation}
+
+            \vspace{3mm}
+            \begin{lstlisting}[language=TeX, basicstyle=\ttfamily\footnotesize, gobble=12]
+            \begin{equation}
+            \nabla \times \mathbf{E} = -\frac{\partial \mathbf{B}}{\partial t}
+            \end{equation}
+            \end{lstlisting}
+
+        \column{0.45\textwidth}
+            \begin{block}{Tip}
+                The theme loads \texttt{amsmath} and \texttt{amssymb} automatically. Use \texttt{align} for multi-line equations.
+            \end{block}
+
+            \begin{equation}
+                \begin{aligned}
+                &\nabla \cdot \mathbf{D} = \rho_f \\
+                &\nabla \cdot \mathbf{B} = 0 \\
+                &\nabla \times \mathbf{E} = -\frac{\partial \mathbf{B}}{\partial t} \\
+                &\nabla \times \mathbf{H} = \mathbf{J}_f + \frac{\partial \mathbf{D}}{\partial t}
+                \end{aligned}
+            \end{equation}
+    \end{columns}
+\end{frame}
+
+
+%% ===================================================================
+%% 2.3 Blocks
+%% ===================================================================
+\subsection{Blocks}
+\begin{frame}[fragile]{Blocks}
+    \begin{columns}[T]
+        \column{0.45\textwidth}
+            \vspace{2mm}
+            \begin{block}{Standard Block}
+                This is a standard \texttt{block} with the WestlakeU blue header.
+            \end{block}
+
+            \begin{alertblock}{Alert Block}
+                This is an \texttt{alertblock} with the orange accent colour.
+            \end{alertblock}
+
+            \begin{exampleblock}{Example Block}
+                This is an \texttt{exampleblock} with a green header and background.
+            \end{exampleblock}
+
+        \column{0.45\textwidth}
+            \begin{lstlisting}[language=TeX, basicstyle=\ttfamily\footnotesize, gobble=12]
+            \begin{block}{Standard Block}
+                Content with blue header.
+            \end{block}
+
+            \begin{alertblock}{Alert Block}
+                Content with orange header.
+            \end{alertblock}
+
+            \begin{exampleblock}{Example Block}
+                Content with green header.
+            \end{exampleblock}
+            \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+
+%% ===================================================================
+%% 2.4 Tables
+%% ===================================================================
+\subsection{Tables}
+\begin{frame}[fragile]{Tables}
+    \begin{columns}[T]
+        \column{0.45\textwidth}
+            Tables are created with the \texttt{tabular} environment. The \texttt{booktabs} package provides professional horizontal rules.
+
+            \vspace{3mm}
+            \begin{table}
+                \centering
+                \footnotesize
+                \begin{tabular}{lcc}
+                    \toprule
+                    \textbf{Command} & \textbf{Purpose} & \textbf{Example} \\
+                    \midrule
+                    \texttt{\textbackslash textbf} & Bold text & \textbf{Hello} \\
+                    \texttt{\textbackslash textcolor\{orange\}} & Coloured text & \textcolor{wl-orange100}{Orange} \\
+                    \texttt{\textbackslash textit} & Italic & \textit{Italic} \\
+                    \bottomrule
+                \end{tabular}
+                \caption{LaTeX formatting commands}
+            \end{table}
+
+        \column{0.45\textwidth}
+        \begin{lstlisting}[language=TeX, basicstyle=\ttfamily\footnotesize, gobble=8]
+        \begin{table}
+            \centering
+            \begin{tabular}{lcc}
+                \toprule
+                \textbf{Col} & \textbf{Col} & \textbf{Col} \\
+                \midrule
+                a & b & c \\
+                \bottomrule
+            \end{tabular}
+            \caption{Example}
+        \end{table}
+        \end{lstlisting}
+    \end{columns}
+\end{frame}
+
+
+%% ===================================================================
+%% 3. Figures and graphics
+%% ===================================================================
+\section{Figures and graphics}
+\begin{frame}[fragile]{Figures and graphics}
+    \begin{columns}[T]
+        \column{0.45\textwidth}
+            Use the \texttt{figure} environment to insert images. The \texttt{graphicspath} is set to \texttt{\{figures/\}}.
+
+            \vspace{3mm}
+            \begin{lstlisting}[language=TeX, basicstyle=\ttfamily\footnotesize, gobble=12]
+            \begin{figure}
+                \centering
+                \includegraphics[width=0.8\linewidth]
+                    {fig1_2}
+                \caption{Your caption here}
+                \label{fig:example}
+            \end{figure}
+            \end{lstlisting}
+
+            Images can include \textbf{hyperlinks} via \texttt{\textbackslash href} inside the caption.
+
+        \column{0.45\textwidth}
+            \begin{alertblock}{Note}
+                Place your \texttt{.jpg}, \texttt{.png}, or \texttt{.pdf} files in the \texttt{figures/} folder and reference them by name (without extension).
+            \end{alertblock}
+
+            \begin{figure}[htbp]
+                \begin{center}
+                    \includegraphics[width=0.8\textwidth]{../assets/photo.jpg}
+                \end{center}
+                        \caption{This photo was taken by Kairos at Westlake University.}
+                \label{fig1}
+            \end{figure}
+    \end{columns}
+\end{frame}
+
+
+\subsection{Subfigures}
+\begin{frame}[fragile]{Subfigures}
+    \begin{columns}[T]
+        \column{0.45\textwidth}
+            \vspace{3mm}
+            \begin{lstlisting}[language=TeX, basicstyle=\ttfamily\footnotesize, gobble=12]
+            \begin{figure}[htbp]
+                \begin{subfigure}{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=\linewidth]{../assets/photo.jpg}
+                \end{subfigure}
+                \begin{subfigure}{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=\linewidth]{../assets/photo.jpg}
+                \end{subfigure}
+                \caption{Two subfigures side by side}
+            \end{figure}
+            \end{lstlisting}
+
+        \column{0.45\textwidth}
+            \vspace{2mm}
+            \begin{figure}[htbp]
+                \begin{subfigure}{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=\linewidth]{../assets/photo.jpg}
+                \end{subfigure}
+                \begin{subfigure}{0.45\linewidth}
+                    \centering
+                    \includegraphics[width=\linewidth]{../assets/photo.jpg}
+                \end{subfigure}
+                \caption{Two subfigures side by side}
+            \end{figure}
+    \end{columns}
+\end{frame}
+%% ===================================================================
+%% 4. Thank you
+%% ===================================================================
+\begin{frame}
+    \vspace{2.5cm}
+    \begin{center}
+        {\Large\textbf{Thanks for your listening!}}
+
+        \vspace{16mm}
+        \includegraphics[width=25mm]{../assets/logo.png}
+    \end{center}
+\end{frame}

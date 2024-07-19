@@ -1,0 +1,41 @@
+# LaTeX temporary files
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.bbl
+*.bcf
+*.blg
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.run.xml
+
+# Generated PDF output (template build artifacts only — not assets/*.pdf)
+report/report.pdf
+letter/letter.pdf
+beamer/beamer.pdf
+poster/poster.pdf
+
+# Build output
+.build/
+
+# CTAN build output
+ctan/**/*.zip
+ctan/**/*.sty
+ctan/**/*.pdf
+
+# Editor / OS files
+.vscode/
+.idea/
+*.swp
+*.bak
+*.swo
+.DS_Store
+Thumbs.db
+
+# Other
+.omo/

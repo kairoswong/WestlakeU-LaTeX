@@ -1,0 +1,43 @@
+%% Project:  WestlakeU-LaTeX
+%% main.tex - Poster main template
+%% content.tex - Body of the poster
+
+\documentclass[final]{beamer}
+\usepackage{../style/westlakeu-poster}
+\usepackage[orientation=portrait,size=a0,scale=1.0]{beamerposter}
+
+%% ---- Additional packages ----
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{lipsum}
+\pgfplotsset{compat=1.14}
+\usepackage{ulem}
+\usepackage{anyfontsize}
+\usepackage[skip=2pt]{subcaption}
+\captionsetup{font=large}
+\usepackage{adjustbox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%% ---- TikZ configurations ----
+\usetikzlibrary{shapes.geometric, arrows, arrows.meta}
+
+\tikzset{
+    startstop/.style={rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, text width=10cm, draw=black, fill=white},
+    process/.style={rectangle, minimum width=3cm, minimum height=1cm, text centered, text width=10cm, draw=black, fill=white},
+    arrow/.style={ultra thick, ->, >=stealth}
+}
+
+%% ---- Layout settings ----
+\definecolor{logo-blue}{RGB}{210, 230, 240}
+\setbeamercolor{headline}{bg=logo-blue, fg=black}
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.025\paperwidth}
+\setlength{\colwidth}{0.425\paperwidth}
+
+\newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
+
+\input{content.tex}
+\end{document}

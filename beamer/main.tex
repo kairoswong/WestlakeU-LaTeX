@@ -1,0 +1,78 @@
+%% !TeX encoding = UTF-8
+%% !TeX spellcheck = en_US
+
+\documentclass[10pt, aspectratio=169]{beamer}
+\usepackage{../style/westlakeu-beamer}
+\usefonttheme{professionalfonts}
+
+%% ---- Additional packages ----
+\usepackage[export]{adjustbox}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{xmpmulti}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{caption}
+\usepackage{subcaption}
+
+%% ---- Fonts (XeLaTeX) ----
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\IfFontExistsTF{Arial}{%
+  \setsansfont{Arial}
+  \setmainfont{Arial}
+}{%
+  \setsansfont{TeX Gyre Heros}
+}
+\IfFontExistsTF{Microsoft YaHei}{%
+  \setCJKmainfont{Microsoft YaHei}
+}{%
+  \IfFontExistsTF{Noto Sans CJK SC}{%
+    \setCJKmainfont{Noto Sans CJK SC}
+  }{}%
+}
+
+\graphicspath{{figures/}{../assets/}}
+
+%% ---- Hyperlinks ----
+\hypersetup{
+  colorlinks = true,
+  allcolors = gray,
+  urlcolor = blue,
+  citecolor = blue,
+}
+
+\captionsetup[figure]{
+    labelformat=empty,
+    font=small,
+}
+
+%% ---- Custom commands ----
+\newcommand{\fullframeimage}[1]{%
+    \begin{center}%
+        \includegraphics[max width=\textwidth, max height=0.8\textheight]{#1}%
+    \end{center}%
+}
+
+\colorlet{westlakeu-emph}{wl-blue100}
+\renewcommand{\emph}[1]{{\color{westlakeu-emph}#1}}
+
+\title{\textbf{Title}}
+\subtitle{\textbf{Subtitle}}
+\author{Kairos Wong}
+\institute{Westlake University}
+\supervisor{XXX}
+\date{\today}
+
+\titleimage{background.jpg}
+
+%% Bibliography (uncomment to enable)
+%% \usepackage[citestyle=authoryear,bibstyle=numeric,hyperref,backend=biber]{biblatex}
+%% \addbibresource{references.bib}
+
+\begin{document}
+\frame{\titlepage}
+\input{content.tex}
+\end{document}

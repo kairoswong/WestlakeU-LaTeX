@@ -1,0 +1,186 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{westlakeu}[2026/05/30 v1.0 WestlakeU Base Style]
+
+%% ===================================================================
+%% Part 1 - Core packages
+%% ===================================================================
+
+\RequirePackage{ifxetex}
+\RequirePackage{ifluatex}
+
+\newif\ifwl@xetex
+\ifxetex\wl@xetextrue\fi
+\ifluatex\wl@xetextrue\fi
+
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{hyperref}
+\RequirePackage{listings}
+\RequirePackage{microtype}
+
+%% ===================================================================
+%% Part 2 - Colour palette
+%% ===================================================================
+%%
+%% Naming convention:  wl-{hue}{shade}
+%%   Hue:   blue, orange, green
+%%   Shade: 100 = pure, 70 -> 50 -> 30 -> 15 -> 10 = lightest
+%%   Aliases: westlakeblue / lightblue / lightorange
+%%
+%% The full palette is always defined here so that westlakeu.sty is
+%% self-contained.  Beamer and poster styles can either load this
+%% package or define their own subset (they share the same values).
+%%
+%% ---- Exploration Blue (primary) ----
+\definecolor{wl-blue100}{HTML}{00498F}
+\definecolor{wl-blue70}{HTML}{4D80B1}
+\definecolor{wl-blue50}{HTML}{80A4C7}
+\definecolor{wl-blue30}{HTML}{B3C8DE}
+\definecolor{wl-blue15}{HTML}{D9E4F0}
+\definecolor{wl-blue10}{HTML}{EEF3F9}
+
+%% ---- Questing Orange (accent) ----
+\definecolor{wl-orange100}{HTML}{F18B1C}
+\definecolor{wl-orange70}{HTML}{F5A84A}
+\definecolor{wl-orange50}{HTML}{F8BC71}
+\definecolor{wl-orange30}{HTML}{FBD19D}
+\definecolor{wl-orange15}{HTML}{FDE8CE}
+\definecolor{wl-orange10}{HTML}{FEF4E7}
+
+%% ---- Growing Green (example blocks) ----
+\definecolor{wl-green100}{HTML}{2E7D32}
+\definecolor{wl-green70}{HTML}{6BA86E}
+\definecolor{wl-green50}{HTML}{95C497}
+\definecolor{wl-green30}{HTML}{C0DFC1}
+\definecolor{wl-green15}{HTML}{E3F2E5}
+\definecolor{wl-green10}{HTML}{F0F8F1}
+
+%% ---- Cross-style aliases ----
+\colorlet{westlakeblue}{wl-blue100}
+\colorlet{lightblue}{wl-blue10}
+\colorlet{lightorange}{wl-orange10}
+%% ===================================================================
+%% Part 3 - Font configuration (XeLaTeX / LuaLaTeX)
+%% ===================================================================
+
+\ifwl@xetex
+  \RequirePackage{fontspec}
+  \RequirePackage{xeCJK}
+
+  % ---- Serif (body text) ----
+  % Times New Roman is the academic standard; fall back to the
+  % system-default serif if it is unavailable.
+  \IfFontExistsTF{Times New Roman}{%
+    \setmainfont{Times New Roman}
+  }{%
+    \setmainfont{TeX Gyre Termes}  % Times-compatible open-source clone
+  }
+
+  % ---- Sans-serif ----
+  \IfFontExistsTF{Arial}{%
+    \setsansfont{Arial}
+  }{%
+    \setsansfont{TeX Gyre Heros}   % Helvetica-compatible open-source clone
+  }
+
+  % ---- Monospace ----
+  \IfFontExistsTF{Courier New}{%
+    \setmonofont{Courier New}
+  }{%
+    \setmonofont{TeX Gyre Cursor}  % Courier-compatible open-source clone
+  }
+
+  % ---- CJK (Chinese / Japanese / Korean) ----
+  \IfFontExistsTF{Microsoft YaHei}{%
+    \setCJKmainfont{Microsoft YaHei}
+    \setCJKsansfont{Microsoft YaHei}
+  }{%
+    \IfFontExistsTF{Noto Sans CJK SC}{%
+      \setCJKmainfont{Noto Sans CJK SC}
+      \setCJKsansfont{Noto Sans CJK SC}
+    }{%
+      \IfFontExistsTF{Source Han Sans SC}{%
+        \setCJKmainfont{Source Han Sans SC}
+        \setCJKsansfont{Source Han Sans SC}
+      }{%
+        % Silently skip — CJK will fall back to the CJK fonts loaded later
+      }
+    }
+  }
+
+\else
+  % ---- Legacy LaTeX fallback ----
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage{mathptmx}  % Times-like font for PDFLaTeX
+\fi
+
+%% ===================================================================
+%% Part 4 - Professional typography parameters
+%% ===================================================================
+
+% Slightly tighter linespacing for economical use of space
+\linespread{1.05}
+
+% Paragraph: indent-based (classical book style), no vertical gap
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+% Prevent widows and orphans
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+% Better ragged-bottom
+\raggedbottom
+
+%% ===================================================================
+%% Part 5 - Hyperlink setup
+%% ===================================================================
+
+\hypersetup{
+    colorlinks,
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+%% ===================================================================
+%% Part 6 - Utilities
+%% ===================================================================
+
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+
+%% ===================================================================
+%% Part 7 - Code listing style
+%% ===================================================================
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.98,0.98,0.98}
+
+\lstdefinestyle{westlakeu}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=none,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{codegray},
+    framerule=0pt,
+    abovecaptionskip=1em,
+    belowcaptionskip=1em
+}
+\lstset{style=westlakeu}
