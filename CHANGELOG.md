@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 - Moved build scripts into `scripts/` directory; simplified README build section to prioritize `make`
 - Replaced ad-hoc conflict warnings with `\AtBeginDocument`-based generic macro system for reliable detection
+- Moved templates to `src/` directory and output PDFs to `output/` directory
+- Updated path references, build scripts, and README accordingly
 
 
 ## [v1.0.0] — 2026-05-30

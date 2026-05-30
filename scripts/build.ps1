@@ -6,7 +6,8 @@ param(
 $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$BuildDir = Join-Path $ScriptDir ".build"
+$ScriptDir = (Get-Item $ScriptDir).Parent.FullName
+$BuildDir = Join-Path $ScriptDir "scripts/.build"
 
 $LatexmkOptions = @(
     "-xelatex",
@@ -30,7 +31,7 @@ function Test-Prerequisites {
 }
 
 function Build-Template([string]$Name) {
-    $dir = Join-Path $ScriptDir $Name
+    $dir = Join-Path $ScriptDir "src" $Name
     $mainTex = Join-Path $dir "main.tex"
     if (-not (Test-Path $mainTex)) {
         Write-Warn "Skipping '$Name': $mainTex not found."
@@ -48,8 +49,10 @@ function Build-Template([string]$Name) {
     & latexmk @LatexmkOptions -cd $outDirArg "$dir\main.tex"
 
     $pdf = Join-Path $templateBuildDir "main.pdf"
-    $destination = Join-Path $dir "$Name.pdf"
+    $outputDir = Join-Path $ScriptDir "output"
+    $destination = Join-Path $outputDir "$Name.pdf"
     if (Test-Path $pdf) {
+        New-Item -ItemType Directory -Force $outputDir | Out-Null
         Copy-Item $pdf $destination -Force
         Write-Ok "Created: $destination"
     }
@@ -63,8 +66,10 @@ function Clean {
 
     Remove-Item $BuildDir -Recurse -Force -ErrorAction SilentlyContinue
 
-    foreach ($dir in @("report", "letter", "beamer", "poster")) {
-        Remove-Item (Join-Path $ScriptDir "$dir\$dir.pdf") -Force -ErrorAction SilentlyContinue
+    # Remove generated PDFs from output directory
+    $outputDir = Join-Path $ScriptDir "output"
+    if (Test-Path $outputDir) {
+        Remove-Item (Join-Path $outputDir "*.pdf") -Force -ErrorAction SilentlyContinue
     }
 
     $patterns = @(
@@ -72,8 +77,11 @@ function Clean {
         "*.blg", "*.run.xml", "*.fls", "*.fdb_latexmk", "*.synctex.gz", "*.vrb"
     )
 
-    Get-ChildItem $ScriptDir -Recurse -File -Depth 3 -Include $patterns |
-        Remove-Item -Force -ErrorAction SilentlyContinue
+    $srcDir = Join-Path $ScriptDir "src"
+    if (Test-Path $srcDir) {
+        Get-ChildItem $srcDir -Recurse -File -Depth 3 -Include $patterns |
+            Remove-Item -Force -ErrorAction SilentlyContinue
+    }
 
     Write-Ok "Cleanup completed."
 }

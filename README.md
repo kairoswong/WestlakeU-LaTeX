@@ -15,15 +15,17 @@ This repository contains LaTeX templates for creating documents related to Westl
 
 ```
 WestlakeU-LaTeX/
-├── beamer/          # Beamer presentation template
-├── letter/          # Letter template
-├── poster/          # Poster template
-├── report/          # Report template
-├── style/           # Shared style files (.sty)
-├── scripts/         # Build helper scripts
-├── assets/          # Logos, images, and previews
-├── Makefile         # Primary build entry (Linux/macOS)
-└── CHANGELOG.md     # Release notes
+├── src/              # Template source files
+│   ├── beamer/       # Beamer presentation template
+│   ├── letter/       # Letter template
+│   ├── poster/       # Poster template
+│   └── report/       # Report template
+├── output/           # Generated PDF files
+├── style/            # Shared style files (.sty)
+├── scripts/          # Build helper scripts
+├── assets/           # Logos, images, and previews
+├── Makefile          # Primary build entry (Linux/macOS)
+└── CHANGELOG.md      # Release notes
 ```
 
 P.S. Feel free to contribute more templates!
@@ -49,11 +51,11 @@ make clean    # Clean up
 make help     # Show all targets
 ```
 
-The raw build scripts are also available in `scripts/` — use `.\scripts\build.ps1` on Windows PowerShell, or `./scripts/build.sh` on Bash. Generated PDFs will be copied into each template directory, for example `beamer/beamer.pdf`. Temporary build files are kept under `.build/`.
+The raw build scripts are also available in `scripts/` — use `.\scripts\build.ps1` on Windows PowerShell, or `./scripts/build.sh` on Bash. Generated PDFs will be placed in the `output/` directory. Temporary build files are kept under `.build/`.
 
 ## Template Usage
 
-Each template keeps editable content in `content.tex` and project settings in `main.tex`. In most cases, you only need to:
+Each template keeps editable content in `content.tex` and project settings in `main.tex` under `src/<template>/`. In most cases, you only need to:
 
 1. Update the title, author, institute, and other metadata in `main.tex`.
 2. Replace the example body in `content.tex`.

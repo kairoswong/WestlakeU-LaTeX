@@ -44,7 +44,7 @@ check_prerequisites() {
 # ---------- Build one template ----------
 build_template() {
     local name="$1"
-    local dir="${SCRIPT_DIR}/${name}"
+    local dir="${SCRIPT_DIR}/src/${name}"
     local main_tex="${dir}/main.tex"
 
     if [[ ! -f "${main_tex}" ]]; then
@@ -61,10 +61,11 @@ build_template() {
         -cd "${dir}/main.tex" \
         -outdir="${BUILD_DIR}/${name}"
 
-    # Copy the final PDF back to the template directory
+    # Copy the final PDF to the output directory
+    mkdir -p "${SCRIPT_DIR}/output"
     if [[ -f "${BUILD_DIR}/${name}/main.pdf" ]]; then
-        cp "${BUILD_DIR}/${name}/main.pdf" "${dir}/${name}.pdf"
-        ok "Created: ${dir}/${name}.pdf"
+        cp "${BUILD_DIR}/${name}/main.pdf" "${SCRIPT_DIR}/output/${name}.pdf"
+        ok "Created: ${SCRIPT_DIR}/output/${name}.pdf"
     else
         err "Failed to find ${BUILD_DIR}/${name}/main.pdf"
     fi
@@ -77,13 +78,11 @@ clean() {
     # Remove build directory
     rm -rf "${BUILD_DIR}"
 
-    # Remove generated PDFs from template directories
-    for dir in report letter beamer poster; do
-        rm -f "${SCRIPT_DIR}/${dir}/${dir}.pdf"
-    done
+    # Remove generated PDFs from output directory
+    rm -f "${SCRIPT_DIR}/output"/*.pdf
 
-    # Remove stray auxiliary files in template directories
-    find "${SCRIPT_DIR}" -maxdepth 3 \
+    # Remove stray auxiliary files in src directories
+    find "${SCRIPT_DIR}/src" -maxdepth 3 \
         \( -name "*.aux" -o -name "*.log" -o -name "*.out" \
            -o -name "*.toc" -o -name "*.nav" -o -name "*.snm" \
            -o -name "*.bbl" -o -name "*.bcf" -o -name "*.blg" \

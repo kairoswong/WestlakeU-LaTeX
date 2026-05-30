@@ -1,5 +1,8 @@
 # Makefile for WestlakeU-LaTeX
 #
+# Templates are located under src/ (e.g. src/report/).
+# Generated PDFs are placed in the output/ directory.
+#
 # Targets:
 #   make          — Build all templates (default)
 #   make report   — Build report only

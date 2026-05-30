@@ -15,10 +15,7 @@
 *.run.xml
 
 # Generated PDF output (template build artifacts only — not assets/*.pdf)
-report/report.pdf
-letter/letter.pdf
-beamer/beamer.pdf
-poster/poster.pdf
+output/
 
 # Build output
 .build/
