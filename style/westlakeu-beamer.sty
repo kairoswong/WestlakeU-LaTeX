@@ -10,7 +10,7 @@
 %%   Colour naming: wl-{hue}{shade}
 %%     Hue:   blue, orange, green
 %%     Shade: 100 = pure, 70 -> 50 -> 30 -> 15 -> 10 = lightest
-%%   Aliases: westlakeblue / lightblue / lightorange  (poster compat)
+%%   Aliases: westlakeblue / lightblue / lightorange
 %% ===================================================================
 
 \RequirePackage{westlakeu}
@@ -25,6 +25,8 @@
 \RequirePackage{graphicx}
 \RequirePackage{tikz}
 \RequirePackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{\paperwidth}
+\setlength{\TPVertModule}{\paperheight}
 \RequirePackage{overpic}
 \RequirePackage{listings}
 
@@ -78,7 +80,7 @@
 %% 4  USER COMMANDS
 %% ===================================================================
 
-\def\titleimage#1{\def\@titleimage{#1}}  \titleimage{bauplan}
+\def\titleimage#1{\def\@titleimage{#1}}  \titleimage{}
 \def\supervisor#1{\def\@supervisor{#1}}  \supervisor{}
 
 
@@ -106,40 +108,38 @@
 \setbeamertemplate{title page}{%
   \thispagestyle{empty}
 
-  % Institute bar (dark strip)
-  \begin{textblock*}{\paperwidth}(1mm,42mm)
-    \begin{pgfpicture}{0mm}{0mm}{\paperwidth-2mm}{6mm}
-      \color{black!30}
-      \pgfpathrectangle{\pgfpoint{0mm}{0mm}}{\pgfpoint{\paperwidth-2mm}{6mm}}
-      \pgfusepath{fill}
-      \pgftext[at=\pgfpoint{5mm}{3mm},left,center]{\textcolor{white}{\scriptsize\insertinstitute}}
-    \end{pgfpicture}
-  \end{textblock*}
-
   % Logo (top-left)
-  \begin{textblock*}{30mm}(6mm,5mm)
+  \begin{textblock*}{30mm}(0mm,5mm)
     \includegraphics[width=30mm]{../assets/logo.png}
   \end{textblock*}
 
   % Title
-  \begin{textblock*}{120mm}(6mm,26mm)
+  \begin{textblock*}{120mm}(0mm,26mm)
     \Large\textbf{\inserttitle}
   \end{textblock*}
 
   % Subtitle
-  \begin{textblock*}{120mm}(6mm,33mm)
+  \begin{textblock*}{120mm}(0mm,33mm)
     \scriptsize\insertsubtitle
   \end{textblock*}
 
   % Author, date & supervisor
-  \begin{textblock*}{120mm}(6mm,37mm)
+  \begin{textblock*}{120mm}(0mm,37mm)
     \scriptsize\insertauthor~|~\insertshortdate
     \ifx\@supervisor\empty\else\qquad Supervisor: \@supervisor\fi
   \end{textblock*}
 
+  \begin{textblock*}{\paperwidth}(-6mm,42mm)
+    \begin{pgfpicture}{0mm}{0mm}{\paperwidth-2mm}{6mm}
+      \color{black!30}
+      \pgfpathrectangle{\pgfpoint{0mm}{0mm}}{\pgfpoint{\paperwidth-2mm}{6mm}}
+      \pgfusepath{fill}
+      \pgftext[at=\pgfpoint{6mm}{3mm},left,center]{\textcolor{white}{\scriptsize\insertinstitute}}
+    \end{pgfpicture}
+  \end{textblock*}
+  
   % Background image strip at bottom
-  % Title image
-  \begin{textblock*}{\paperwidth}(1.0mm,48.1mm)
+  \begin{textblock*}{\paperwidth}(-6mm,48.0mm)
     \begin{overpic}[width=158mm,height=38.0mm]{\@titleimage}
       \put(0,0){\begin{pgfpicture}{0mm}{0mm}{2mm}{2mm}
         \pgfpathmoveto{\pgfpoint{0mm}{2mm}}
@@ -175,16 +175,17 @@
 %% ---- 5.4  Frame title (left-aligned, logo top-right, auto-numbered) ----
 \setbeamertemplate{frametitle}{%
   \vspace{2mm}%
-  \vbox{\hsize=12cm\bfseries
+  \begin{textblock*}{120mm}(-2mm,5mm)
+    \bfseries
     \ifnum\insertsectionnumber>0\relax
       \insertsectionnumber
       \ifnum\insertsubsectionnumber>0\relax.\insertsubsectionnumber\ \fi
       \enspace
     \fi
     \insertframetitle
-  }%
-  \begin{textblock*}{17mm}(140mm,3.5mm)
-    \includegraphics[width=16mm]{../assets/logo.png}
+  \end{textblock*}%
+  \begin{textblock*}{20mm}(130mm,3mm)
+    \includegraphics[width=20mm]{../assets/logo.png}
   \end{textblock*}%
 }
 

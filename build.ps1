@@ -41,14 +41,11 @@ function Build-Template([string]$Name) {
     New-Item -ItemType Directory -Force $templateBuildDir | Out-Null
 
     Write-Info "Building $Name ..."
-    Push-Location $dir
-    try {
-        $outDirArg = "-outdir=$($templateBuildDir -replace '\\', '/')"
-        & latexmk @LatexmkOptions $outDirArg "main.tex"
-    }
-    finally {
-        Pop-Location
-    }
+
+    $env:TEXINPUTS = "$([System.IO.Path]::GetFullPath((Join-Path $ScriptDir 'style'))//;$env:TEXINPUTS"
+
+    $outDirArg = "-outdir=$($templateBuildDir -replace '\\', '/')"
+    & latexmk @LatexmkOptions -cd $outDirArg "$dir\main.tex"
 
     $pdf = Join-Path $templateBuildDir "main.pdf"
     $destination = Join-Path $dir "$Name.pdf"
@@ -92,7 +89,11 @@ switch ($Target) {
         Test-Prerequisites
         Build-Template "report"
     }
-    { $_ -in @("cover", "letter") } {
+    "letter" {
+        Test-Prerequisites
+        Build-Template "letter"
+    }
+    "cover" {
         Test-Prerequisites
         Build-Template "letter"
     }

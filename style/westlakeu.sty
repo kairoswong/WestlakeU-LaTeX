@@ -2,15 +2,38 @@
 \ProvidesPackage{westlakeu}[2026/05/30 v1.0 WestlakeU Base Style]
 
 %% ===================================================================
-%% Part 1 - Core packages
+%% Part 0 - Utility macros
+%% ===================================================================
+%%
+%%   \wl@error{msg}   -- fatal error, halts compilation
+%%   \wl@warning{msg} -- warning, continues
+%%   \wl@info{msg}    -- debug info printed to terminal
 %% ===================================================================
 
+\newcommand\wl@error[1]{\PackageError{westlakeu}{#1}{}}
+\newcommand\wl@warning[1]{\PackageWarning{westlakeu}{#1}}
+\newcommand\wl@info[1]{\typeout{Package westlakeu Info: #1}}
+
+%% ---- LaTeX kernel version check ----
+\@ifl@t@r\fmtversion{2021/11/15}{}{
+  \wl@error{TeX Live 2021 or later is required for WestlakeU-LaTeX}
+}
+
+%% ---- Engine detection ----
 \RequirePackage{ifxetex}
 \RequirePackage{ifluatex}
 
 \newif\ifwl@xetex
 \ifxetex\wl@xetextrue\fi
 \ifluatex\wl@xetextrue\fi
+
+\ifwl@xetex\else
+  \wl@error{XeLaTeX or LuaLaTeX is required. Please use xelatex or lualatex.}
+\fi
+
+%% ===================================================================
+%% Part 1 - Core packages
+%% ===================================================================
 
 \RequirePackage{graphicx}
 \RequirePackage{xcolor}
@@ -59,60 +82,221 @@
 \colorlet{westlakeblue}{wl-blue100}
 \colorlet{lightblue}{wl-blue10}
 \colorlet{lightorange}{wl-orange10}
+
 %% ===================================================================
-%% Part 3 - Font configuration (XeLaTeX / LuaLaTeX)
+%% Part 3 - Font system (hierarchical, auto-detecting)
+%% ===================================================================
+%%
+%% Design:
+%%
+%%   Fonts are separated into three independent axes:
+%%     1. Western (serif / sans / mono)
+%%     2. CJK     (main / sans)
+%%     3. Math    (OpenType via unicode-math, or default)
+%%
+%%   Each axis provides several named presets.  The top-level command
+%%   \wl@set@font@auto  detects the OS and available fonts, then
+%%   chains the appropriate presets.
+%%
+%%   OS detection   →  Western preset  →  Western fonts loaded
+%%                  →  CJK preset      →  CJK fonts loaded
+%%                  →  Math preset     →  Math fonts loaded
+%%
+%%   The detection runs at \AtEndPreamble so user packages and options
+%%   loaded in the preamble take effect first.
 %% ===================================================================
 
-\ifwl@xetex
-  \RequirePackage{fontspec}
-  \RequirePackage{xeCJK}
+\RequirePackage{fontspec}
+\RequirePackage{xeCJK}
 
-  % ---- Serif (body text) ----
-  % Times New Roman is the academic standard; fall back to the
-  % system-default serif if it is unavailable.
-  \IfFontExistsTF{Times New Roman}{%
-    \setmainfont{Times New Roman}
-  }{%
-    \setmainfont{TeX Gyre Termes}  % Times-compatible open-source clone
-  }
+%% ---- 3.1  OS detection ----
+\newif\ifwl@os@windows
+\newif\ifwl@os@mac
+\newif\ifwl@os@linux
 
-  % ---- Sans-serif ----
-  \IfFontExistsTF{Arial}{%
-    \setsansfont{Arial}
+\newcommand\wl@detect@os{%
+  \IfFileExists{/System/Library/Fonts/Menlo.ttc}{%
+    \wl@os@mactrue
+    \wl@info{Detected OS: macOS}%
   }{%
-    \setsansfont{TeX Gyre Heros}   % Helvetica-compatible open-source clone
-  }
-
-  % ---- Monospace ----
-  \IfFontExistsTF{Courier New}{%
-    \setmonofont{Courier New}
-  }{%
-    \setmonofont{TeX Gyre Cursor}  % Courier-compatible open-source clone
-  }
-
-  % ---- CJK (Chinese / Japanese / Korean) ----
-  \IfFontExistsTF{Microsoft YaHei}{%
-    \setCJKmainfont{Microsoft YaHei}
-    \setCJKsansfont{Microsoft YaHei}
-  }{%
-    \IfFontExistsTF{Noto Sans CJK SC}{%
-      \setCJKmainfont{Noto Sans CJK SC}
-      \setCJKsansfont{Noto Sans CJK SC}
+    \IfFileExists{C:/Windows/Fonts/arial.ttf}{%
+      \wl@os@windowstrue
+      \wl@info{Detected OS: Windows}%
     }{%
-      \IfFontExistsTF{Source Han Sans SC}{%
-        \setCJKmainfont{Source Han Sans SC}
-        \setCJKsansfont{Source Han Sans SC}
+      \IfFileExists{/usr/share/fonts}{%
+        \wl@os@linuxtrue
+        \wl@info{Detected OS: Linux}%
       }{%
-        % Silently skip — CJK will fall back to the CJK fonts loaded later
-      }
-    }
-  }
+        \wl@info{OS detection: assuming Linux}%
+        \wl@os@linuxtrue
+      }%
+    }%
+  }%
+}
 
-\else
-  % ---- Legacy LaTeX fallback ----
-  \RequirePackage[T1]{fontenc}
-  \RequirePackage{mathptmx}  % Times-like font for PDFLaTeX
-\fi
+%% ---- 3.2  Western font presets ----
+
+% \wl@set@font@serif@times
+%   Tries Times New Roman → TeX Gyre Termes → default.
+\newcommand\wl@set@font@serif@{%
+  \IfFontExistsTF{Times New Roman}{%
+    \setmainfont{Times New Roman}%
+    \wl@info{Western serif: Times New Roman}%
+  }{%
+    \IfFontExistsTF{TeX Gyre Termes}{%
+      \setmainfont{TeX Gyre Termes}%
+      \wl@info{Western serif: TeX Gyre Termes (Times fallback)}%
+    }{%
+      \wl@warning{No Times-like serif font found, using default}%
+    }%
+  }%
+}
+
+% \wl@set@font@sans@default
+%   Tries Arial → TeX Gyre Heros → default.
+\newcommand\wl@set@font@sans@{%
+  \IfFontExistsTF{Arial}{%
+    \setsansfont{Arial}%
+    \wl@info{Western sans: Arial}%
+  }{%
+    \IfFontExistsTF{TeX Gyre Heros}{%
+      \setsansfont{TeX Gyre Heros}%
+      \wl@info{Western sans: TeX Gyre Heros (Arial/Helvetica fallback)}%
+    }{%
+      \wl@warning{No Arial-like sans font found, using default}%
+    }%
+  }%
+}
+
+% \wl@set@font@mono@default
+%   Tries Courier New → TeX Gyre Cursor → default.
+\newcommand\wl@set@font@mono@{%
+  \IfFontExistsTF{Courier New}{%
+    \setmonofont{Courier New}%
+    \wl@info{Western mono: Courier New}%
+  }{%
+    \IfFontExistsTF{TeX Gyre Cursor}{%
+      \setmonofont{TeX Gyre Cursor}%
+      \wl@info{Western mono: TeX Gyre Cursor (Courier fallback)}%
+    }{%
+      \wl@warning{No Courier-like mono font found, using default}%
+    }%
+  }%
+}
+
+% \wl@set@font@western@auto  -- chain all three categories.
+\newcommand\wl@set@font@western@{%
+  \wl@set@font@serif@
+  \wl@set@font@sans@
+  \wl@set@font@mono@
+}
+
+%% ---- 3.3  CJK font presets ----
+
+% \wl@set@cjk@windows
+%   Windows-native Chinese fonts (YaHei for both serif and sans).
+\newcommand\wl@set@cjk@windows{%
+  \IfFontExistsTF{Microsoft YaHei}{%
+    \setCJKmainfont{Microsoft YaHei}%
+    \setCJKsansfont{Microsoft YaHei}%
+    \wl@info{CJK: Microsoft YaHei (Windows)}%
+  }{%
+    \wl@warning{CJK font Microsoft YaHei not found on Windows}%
+  }%
+}
+
+% \wl@set@cjk@mac
+%   macOS Chinese fonts.
+\newcommand\wl@set@cjk@mac{%
+  \IfFontExistsTF{STSongti SC}{%
+    \setCJKmainfont{STSongti SC}%
+    \setCJKsansfont{STHeiti SC}%
+    \wl@info{CJK: STSongti + STHeiti (macOS)}%
+  }{%
+    \IfFontExistsTF{PingFang SC}{%
+      \setCJKmainfont{PingFang SC}%
+      \setCJKsansfont{PingFang SC}%
+      \wl@info{CJK: PingFang SC (macOS)}%
+    }{%
+      \wl@set@cjk@noto
+    }%
+  }%
+}
+
+% \wl@set@cjk@noto
+%   Noto Sans CJK SC (cross-platform open-source).
+\newcommand\wl@set@cjk@noto{%
+  \IfFontExistsTF{Noto Sans CJK SC}{%
+    \setCJKmainfont{Noto Sans CJK SC}%
+    \setCJKsansfont{Noto Sans CJK SC}%
+    \wl@info{CJK: Noto Sans CJK SC}%
+  }{%
+    \IfFontExistsTF{Source Han Sans SC}{%
+      \setCJKmainfont{Source Han Sans SC}%
+      \setCJKsansfont{Source Han Sans SC}%
+      \wl@info{CJK: Source Han Sans SC}%
+    }{%
+      \wl@warning{No CJK font found, Chinese text may not render}%
+    }%
+  }%
+}
+
+% \wl@set@cjk@auto
+%   Dispatch based on detected OS.
+\newcommand\wl@set@cjk@{%
+  \ifwl@os@windows
+    \wl@set@cjk@windows
+  \else\ifwl@os@mac
+    \wl@set@cjk@mac
+  \else
+    \wl@set@cjk@noto
+  \fi\fi
+}
+
+%% ---- 3.4  Math font presets ----
+%%
+%% Uses unicode-math for OpenType math fonts matching the chosen serif.
+%% This is called from \AtEndPreamble so users can opt out by loading
+%% unicode-math manually first, or by using legacy math font packages.
+%% If unicode-math is already loaded, we try to set a matching font.
+%% If it is not loaded by the user, we leave the default math setup.
+
+\newcommand\wl@set@math@auto{%
+  \@ifpackageloaded{unicode-math}{%
+    \IfFontExistsTF{XITS Math}{%
+      \setmathfont{XITS Math}%
+      \wl@info{Math: XITS Math (unicode-math)}%
+    }{%
+      \IfFontExistsTF{STIX Two Math}{%
+        \setmathfont{STIX Two Math}%
+        \wl@info{Math: STIX Two Math (unicode-math)}%
+      }{%
+        \IfFontExistsTF{Libertinus Math}{%
+          \setmathfont{Libertinus Math}%
+          \wl@info{Math: Libertinus Math (unicode-math)}%
+        }{%
+          \wl@info{Math: unicode-math loaded, but no OpenType math font set}%
+        }%
+      }%
+    }%
+  }{%
+    \wl@info{Math: unicode-math not loaded, using default math font}%
+  }%
+}
+
+%% ---- 3.5  Master auto-detection command ----
+\newcommand\wl@set@font@auto{%
+  \wl@detect@os
+  \wl@set@font@western@
+  \wl@set@cjk@
+  \wl@set@math@auto
+}
+
+%% ---- 3.6  Defer font setup to end of preamble ----
+%%
+%% This ensures that user packages and options (e.g., \thusetup-like
+%% commands in the future) take effect before fonts are selected.
+\AtEndPreamble{\wl@set@font@auto}
 
 %% ===================================================================
 %% Part 4 - Professional typography parameters
@@ -152,7 +336,26 @@
 \newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
 
 %% ===================================================================
-%% Part 7 - Code listing style
+%% Part 7 - Known package conflict detection
+%% ===================================================================
+%%
+%% These must be placed after core packages but before the preamble
+%% ends — they use AtEndOfPackageFile* hooks.
+%% ===================================================================
+
+\@ifpackageloaded{unicode-math}{
+  \AtEndOfPackageFile*{amsfonts}{%
+    \wl@warning{Package "amsfonts" is incompatible with "unicode-math" —
+      amsfonts symbols are already provided by unicode-math}%
+  }
+  \AtEndOfPackageFile*{amssymb}{%
+    \wl@warning{Package "amssymb" is incompatible with "unicode-math" —
+      amssymb symbols are already provided by unicode-math}%
+  }
+}{}
+
+%% ===================================================================
+%% Part 8 - Code listing style
 %% ===================================================================
 
 \definecolor{codegreen}{rgb}{0,0.6,0}

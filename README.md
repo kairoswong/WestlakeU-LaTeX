@@ -43,12 +43,13 @@ All templates can be built with the provided helper scripts. Use `build.ps1` on 
 ### Windows PowerShell
 
 ```powershell
+cd WestlakeU-LaTeX
 # Build all templates
 .\build.ps1
 
 # Build a specific template
 .\build.ps1 report      # Build report template
-.\build.ps1 letter     # Build letter template
+.\build.ps1 letter      # Build letter template
 .\build.ps1 beamer      # Build beamer presentation
 .\build.ps1 poster      # Build poster
 
@@ -56,9 +57,11 @@ All templates can be built with the provided helper scripts. Use `build.ps1` on 
 .\build.ps1 clean
 ```
 
-### Bash
+### macOS / Linux
 
 ```bash
+cd WestlakeU-LaTeX
+
 # Build all templates
 ./build.sh
 

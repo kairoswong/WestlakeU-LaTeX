@@ -55,12 +55,11 @@ build_template() {
     info "Building ${name} ..."
     mkdir -p "${BUILD_DIR}/${name}"
 
-    # Run latexmk inside the template directory so relative includes (e.g., content.tex) work
-    cd "${dir}"
+    export TEXINPUTS="${SCRIPT_DIR}/style//:${TEXINPUTS:-}"
 
     latexmk "${LATEXMK_OPTS[@]}" \
-        -outdir="${BUILD_DIR}/${name}" \
-        main.tex
+        -cd "${dir}/main.tex" \
+        -outdir="${BUILD_DIR}/${name}"
 
     # Copy the final PDF back to the template directory
     if [[ -f "${BUILD_DIR}/${name}/main.pdf" ]]; then
@@ -69,8 +68,6 @@ build_template() {
     else
         err "Failed to find ${BUILD_DIR}/${name}/main.pdf"
     fi
-
-    cd "${SCRIPT_DIR}"
 }
 
 # ---------- Clean auxiliary files ----------
@@ -110,7 +107,7 @@ main() {
             check_prerequisites
             build_template "report"
             ;;
-        cover|letter)
+        letter)
             check_prerequisites
             build_template "letter"
             ;;
@@ -126,7 +123,7 @@ main() {
             clean
             ;;
         *)
-            echo "Usage: $0 [all | report | cover | letter | beamer | poster | clean]"
+            echo "Usage: $0 [all | report | letter | beamer | poster | clean]"
             exit 1
             ;;
     esac

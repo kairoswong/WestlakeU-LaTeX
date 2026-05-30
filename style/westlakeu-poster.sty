@@ -21,8 +21,6 @@
 \RequirePackage{exscale}
 \RequirePackage{ragged2e}
 \RequirePackage{changepage}
-\RequirePackage{fontspec}
-\RequirePackage{xeCJK}
 \RequirePackage{calc}
 
 %% ===================================================================
@@ -31,7 +29,7 @@
 
 \setbeamercolor{palette primary}          {fg=black,bg=white}
 \setbeamercolor{palette secondary}        {fg=black,bg=white}
-\setbeamercolor{palette tertiary}         {fg=white,bg=black}
+\setbeamercolor{palette tertiary}         {fg=white,bg=white}
 \setbeamercolor{palette quaternary}       {fg=black,bg=white}
 \setbeamercolor{structure}                {fg=westlakeblue}
 \setbeamercolor{headline}                 {fg=white,bg=wl-blue100}
@@ -74,16 +72,6 @@
 \setbeamerfont{caption}            {size=\small}
 \setbeamerfont{footline}           {size=\normalsize}
 
-%% ---- CJK fonts ----
-\IfFontExistsTF{Microsoft YaHei}{%
-  \setCJKmainfont{Microsoft YaHei}
-  \setCJKsansfont{Microsoft YaHei}
-}{%
-  \IfFontExistsTF{Noto Sans CJK SC}{%
-    \setCJKmainfont{Noto Sans CJK SC}
-    \setCJKsansfont{Noto Sans CJK SC}
-  }{}%
-}
 
 %% ===================================================================
 %% 4  GENERAL TEMPLATES
@@ -203,10 +191,11 @@
 \setbeamertemplate{footline}{%
   \ifdefined\insertfootercontent
     \begin{beamercolorbox}[vmode]{headline}
+      \setbeamercolor{headline}{fg=black}
       \ifbeamercolorempty[bg]{headline rule}{}{%
         \begin{beamercolorbox}[wd=\paperwidth,colsep=0.25ex]{headline rule}\end{beamercolorbox}}%
       \vspace{1.5ex}%
-      \hspace{\sepwidth}\usebeamerfont{footline}\centering\insertfootercontent\hspace{\sepwidth}%
+      \hspace{\sepwidth}\usebeamerfont{footline}\centering{\hypersetup{urlcolor=black}\color{black}\insertfootercontent}\hspace{\sepwidth}%
       \vspace{1.5ex}%
     \end{beamercolorbox}%
   \fi}

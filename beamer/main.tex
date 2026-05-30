@@ -17,22 +17,9 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
-%% ---- Fonts (XeLaTeX) ----
-\usepackage{fontspec}
-\usepackage{xeCJK}
-\IfFontExistsTF{Arial}{%
-  \setsansfont{Arial}
-  \setmainfont{Arial}
-}{%
-  \setsansfont{TeX Gyre Heros}
-}
-\IfFontExistsTF{Microsoft YaHei}{%
-  \setCJKmainfont{Microsoft YaHei}
-}{%
-  \IfFontExistsTF{Noto Sans CJK SC}{%
-    \setCJKmainfont{Noto Sans CJK SC}
-  }{}%
-}
+%% ---- Fonts are now auto-detected by westlakeu.sty ----
+%% ---- westlakeu.sty now handles font detection at \AtEndPreamble.
+%% ---- If you need custom fonts, set them AFTER loading westlakeu-beamer.
 
 \graphicspath{{figures/}{../assets/}}
 
