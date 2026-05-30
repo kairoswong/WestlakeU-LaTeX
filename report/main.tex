@@ -17,6 +17,10 @@
 \usepackage{algpseudocode}
 \usepackage[style=nature]{biblatex}
 
+%% ---- Paragraph indentation ----
+\setlength{\parindent}{0em}
+\setlength{\parskip}{6pt}
+
 %% ---- User information ----
 \renewcommand{\figurename}{Fig.}
 \newcommand{\name}{XXX XXX}
@@ -45,6 +49,13 @@
     \school             \\[14pt]
     \today              \\[10pt]
 \end{titlepage}
+
+%% Protect single-use commands after the title page
+\makeatletter
+\wl@once{name}
+\wl@once{ID}
+\wl@once{school}
+\makeatother
 
 %% ===================================================================
 %% Main body

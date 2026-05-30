@@ -80,8 +80,8 @@
 %% 4  USER COMMANDS
 %% ===================================================================
 
-\def\titleimage#1{\def\@titleimage{#1}}  \titleimage{}
-\def\supervisor#1{\def\@supervisor{#1}}  \supervisor{}
+\def\titleimage#1{\def\@titleimage{#1}\wl@once{titleimage}}  \def\@titleimage{}
+\def\supervisor#1{\def\@supervisor{#1}\wl@once{supervisor}}  \def\@supervisor{}
 
 
 %% ===================================================================
@@ -109,37 +109,37 @@
   \thispagestyle{empty}
 
   % Logo (top-left)
-  \begin{textblock*}{30mm}(0mm,5mm)
+  \begin{textblock*}{30mm}(5mm,5mm)
     \includegraphics[width=30mm]{../assets/logo.png}
   \end{textblock*}
 
   % Title
-  \begin{textblock*}{120mm}(0mm,26mm)
+  \begin{textblock*}{120mm}(5mm,26mm)
     \Large\textbf{\inserttitle}
   \end{textblock*}
 
   % Subtitle
-  \begin{textblock*}{120mm}(0mm,33mm)
+  \begin{textblock*}{120mm}(5mm,33mm)
     \scriptsize\insertsubtitle
   \end{textblock*}
 
   % Author, date & supervisor
-  \begin{textblock*}{120mm}(0mm,37mm)
+  \begin{textblock*}{120mm}(5mm,37mm)
     \scriptsize\insertauthor~|~\insertshortdate
     \ifx\@supervisor\empty\else\qquad Supervisor: \@supervisor\fi
   \end{textblock*}
 
-  \begin{textblock*}{\paperwidth}(-6mm,42mm)
+  \begin{textblock*}{\paperwidth}(1mm,42mm)
     \begin{pgfpicture}{0mm}{0mm}{\paperwidth-2mm}{6mm}
       \color{black!30}
       \pgfpathrectangle{\pgfpoint{0mm}{0mm}}{\pgfpoint{\paperwidth-2mm}{6mm}}
       \pgfusepath{fill}
-      \pgftext[at=\pgfpoint{6mm}{3mm},left,center]{\textcolor{white}{\scriptsize\insertinstitute}}
+      \pgftext[at=\pgfpoint{4mm}{3mm},left,center]{\textcolor{white}{\scriptsize\insertinstitute}}
     \end{pgfpicture}
   \end{textblock*}
   
   % Background image strip at bottom
-  \begin{textblock*}{\paperwidth}(-6mm,48.0mm)
+  \begin{textblock*}{\paperwidth}(1mm,48.0mm)
     \begin{overpic}[width=158mm,height=38.0mm]{\@titleimage}
       \put(0,0){\begin{pgfpicture}{0mm}{0mm}{2mm}{2mm}
         \pgfpathmoveto{\pgfpoint{0mm}{2mm}}
@@ -175,7 +175,7 @@
 %% ---- 5.4  Frame title (left-aligned, logo top-right, auto-numbered) ----
 \setbeamertemplate{frametitle}{%
   \vspace{2mm}%
-  \begin{textblock*}{120mm}(-2mm,5mm)
+  \begin{textblock*}{120mm}(5mm,4mm)
     \bfseries
     \ifnum\insertsectionnumber>0\relax
       \insertsectionnumber
@@ -184,7 +184,7 @@
     \fi
     \insertframetitle
   \end{textblock*}%
-  \begin{textblock*}{20mm}(130mm,3mm)
+  \begin{textblock*}{20mm}(135mm,3mm)
     \includegraphics[width=20mm]{../assets/logo.png}
   \end{textblock*}%
 }

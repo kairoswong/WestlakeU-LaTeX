@@ -49,6 +49,10 @@
   \textbf{POSTER} \hfill
   \href{mailto:kairoswong@westlake.edu.cn}{\textbf{kairoswong@westlake.edu.cn}}
 }
+%% Protect poster-specific single-use commands
+\makeatletter
+\wl@once{footercontent}
+\makeatother
 
 \logoleft{\includegraphics[height=4cm, keepaspectratio]{../assets/logo.png}}
 \input{content.tex}

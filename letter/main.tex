@@ -21,6 +21,10 @@
 \geometry{a4paper, margin=1in}
 \pagestyle{empty}
 
+%% ---- Paragraph indentation ----
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
 \begin{document}
 %% ---- Letter header ----
 \begin{flushleft}
@@ -46,8 +50,7 @@ Email: \href{mailto:\email}{\email} \\
 Dear \recipient,
 \end{flushleft}
 
-{\setlength{\parindent}{20pt}
-\input{content}}
+\input{content}
 
 %% ---- Closing ----
 \vfill

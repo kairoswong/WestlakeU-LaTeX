@@ -14,6 +14,15 @@
 \newcommand\wl@warning[1]{\PackageWarning{westlakeu}{#1}}
 \newcommand\wl@info[1]{\typeout{Package westlakeu Info: #1}}
 
+%% ---- Once-only command guard ----
+%% After a command has been used once, replace it with an error so that
+%% accidental second calls are caught early.
+\newcommand\wl@once[1]{%
+  \expandafter\def\csname #1\endcsname{%
+    \wl@error{\protect\csname #1\endcsname\space can only be used once}%
+  }%
+}
+
 %% ---- LaTeX kernel version check ----
 \@ifl@t@r\fmtversion{2021/11/15}{}{
   \wl@error{TeX Live 2021 or later is required for WestlakeU-LaTeX}
@@ -30,6 +39,29 @@
 \ifwl@xetex\else
   \wl@error{XeLaTeX or LuaLaTeX is required. Please use xelatex or lualatex.}
 \fi
+
+%% ---- Package conflict declaration ----
+%%
+%%   \wl@package@conflict{<existing>}{<loaded-later>}
+%%
+%%   Registers a check that detects if <loaded-later> has been loaded
+%%   alongside <existing>, and issues a fatal error.  The check runs
+%%   at \begin{document} when all packages are guaranteed to be loaded.
+%%
+%%   Both arguments are package names as given to \usepackage.
+%%
+%%   Usage:
+%%     \wl@package@conflict{biblatex}{natbib}
+%%
+\newcommand\wl@package@conflict[2]{%
+  \AtBeginDocument{%
+    \@ifpackageloaded{#1}{%
+      \@ifpackageloaded{#2}{%
+        \wl@error{The "#2" package is incompatible with "#1"}%
+      }{}%
+    }{}%
+  }%
+}
 
 %% ===================================================================
 %% Part 1 - Core packages
@@ -305,10 +337,6 @@
 % Slightly tighter linespacing for economical use of space
 \linespread{1.05}
 
-% Paragraph: indent-based (classical book style), no vertical gap
-\setlength{\parindent}{2em}
-\setlength{\parskip}{0pt}
-
 % Prevent widows and orphans
 \clubpenalty=10000
 \widowpenalty=10000
@@ -336,23 +364,31 @@
 \newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
 
 %% ===================================================================
-%% Part 7 - Known package conflict detection
+%% Part 7 - Package conflict detection
 %% ===================================================================
 %%
-%% These must be placed after core packages but before the preamble
-%% ends — they use AtEndOfPackageFile* hooks.
+%% Declare known incompatibilities here.  Each declaration uses the
+%% reusable \wl@package@conflict macro defined in Part 0.
+%%
+%% Note: beamer loads amsmath/amssymb/amsfonts internally, so these
+%%       conflicts only apply when westlakeu.sty is used standalone
+%%       (e.g., in the report template) or when unicode-math is loaded
+%%       before beamer.
 %% ===================================================================
 
-\@ifpackageloaded{unicode-math}{
-  \AtEndOfPackageFile*{amsfonts}{%
-    \wl@warning{Package "amsfonts" is incompatible with "unicode-math" —
-      amsfonts symbols are already provided by unicode-math}%
-  }
-  \AtEndOfPackageFile*{amssymb}{%
-    \wl@warning{Package "amssymb" is incompatible with "unicode-math" —
-      amssymb symbols are already provided by unicode-math}%
-  }
-}{}
+%% ---- unicode-math vs legacy math font packages ----
+\wl@package@conflict{unicode-math}{amsfonts}%
+\wl@package@conflict{unicode-math}{amssymb}%
+\wl@package@conflict{unicode-math}{amsmath}%
+
+%% ---- Bibliography system conflicts ----
+\wl@package@conflict{biblatex}{natbib}%
+\wl@package@conflict{biblatex}{bibunits}%
+\wl@package@conflict{biblatex}{chapterbib}%
+
+%% ---- Hyperref vs. packages that break it ----
+\wl@package@conflict{hyperref}{cite}%
+\wl@package@conflict{hyperref}{natbib}%
 
 %% ===================================================================
 %% Part 8 - Code listing style
