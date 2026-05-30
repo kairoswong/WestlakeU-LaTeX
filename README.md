@@ -20,9 +20,10 @@ WestlakeU-LaTeX/
 ├── poster/          # Poster template
 ├── report/          # Report template
 ├── style/           # Shared style files (.sty)
+├── scripts/         # Build helper scripts
 ├── assets/          # Logos, images, and previews
-├── build.sh         # Bash build helper
-└── build.ps1        # PowerShell build helper
+├── Makefile         # Primary build entry (Linux/macOS)
+└── CHANGELOG.md     # Release notes
 ```
 
 P.S. Feel free to contribute more templates!
@@ -38,44 +39,17 @@ P.S. Feel free to contribute more templates!
 
 ## Building
 
-All templates can be built with the provided helper scripts. Use `build.ps1` on Windows PowerShell and `build.sh` on macOS/Linux or other Bash environments.
-
-### Windows PowerShell
-
-```powershell
-cd WestlakeU-LaTeX
-# Build all templates
-.\build.ps1
-
-# Build a specific template
-.\build.ps1 report      # Build report template
-.\build.ps1 letter      # Build letter template
-.\build.ps1 beamer      # Build beamer presentation
-.\build.ps1 poster      # Build poster
-
-# Clean auxiliary files and generated PDFs
-.\build.ps1 clean
-```
-
-### macOS / Linux
+The primary build method is **`make`** (available on Linux/macOS and Windows via Git Bash or WSL).
 
 ```bash
 cd WestlakeU-LaTeX
-
-# Build all templates
-./build.sh
-
-# Build a specific template
-./build.sh report      # Build report template
-./build.sh letter      # Build letter template
-./build.sh beamer      # Build beamer presentation
-./build.sh poster      # Build poster
-
-# Clean auxiliary files and generated PDFs
-./build.sh clean
+make          # Build all templates
+make beamer   # Build a specific template
+make clean    # Clean up
+make help     # Show all targets
 ```
 
-Generated PDFs are copied into each template directory, for example `report/report.pdf`. Temporary build files are kept under `.build/`.
+The raw build scripts are also available in `scripts/` — use `.\scripts\build.ps1` on Windows PowerShell, or `./scripts/build.sh` on Bash. Generated PDFs will be copied into each template directory, for example `beamer/beamer.pdf`. Temporary build files are kept under `.build/`.
 
 ## Template Usage
 

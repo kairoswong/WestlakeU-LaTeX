@@ -16,3 +16,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Deferred font detection to end-of-preamble to avoid interference with user packages
 - Removed duplicate font loading from beamer and poster templates; fonts are now managed centrally by the base style package
 
+
+## [v1.0.1] — 2026-05-30
+
+### Added
+- Added `Makefile` with targets for all, report, beamer, poster, letter, clean, and help
+
+### Changed
+- Moved build scripts into `scripts/` directory; simplified README build section to prioritize `make`
