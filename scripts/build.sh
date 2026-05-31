@@ -55,12 +55,20 @@ build_template() {
     info "Building ${name} ..."
     mkdir -p "${BUILD_DIR}/${name}"
 
-    export TEXINPUTS="${SCRIPT_DIR}/style//:${TEXINPUTS:-}"
+    local style_path
+    case "$(uname -s)" in
+        CYGWIN*|MINGW*|MSYS*) style_path="$(cygpath -w "${SCRIPT_DIR}/style")" ;;
+        *) style_path="${SCRIPT_DIR}/style" ;;
+    esac
 
-    latexmk "${LATEXMK_OPTS[@]}" \
-        -cd "${dir}" \
-        -outdir="${BUILD_DIR}/${name}" \
-        "main.tex"
+    export TEXINPUTS="${style_path}//:${TEXINPUTS:-}"
+
+    (
+        cd "${dir}"
+        latexmk "${LATEXMK_OPTS[@]}" \
+            -outdir="${BUILD_DIR}/${name}" \
+            main.tex
+    )
 
     # Copy the final PDF to the output directory
     mkdir -p "${SCRIPT_DIR}/output"

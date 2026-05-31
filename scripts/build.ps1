@@ -43,10 +43,25 @@ function Build-Template([string]$Name) {
 
     Write-Info "Building $Name ..."
 
-    $env:TEXINPUTS = "$([System.IO.Path]::GetFullPath((Join-Path $ScriptDir 'style')))//;$env:TEXINPUTS"
+    # Set TEXINPUTS with absolute path (Unix-style for TeX)
+    $stylePath = (Join-Path $ScriptDir "style") -replace '\\', '/'
+    $env:TEXINPUTS = "${stylePath}//;${env:TEXINPUTS}"
 
-    $outDirArg = "-outdir=$($templateBuildDir -replace '\\', '/')"
-    & latexmk @LatexmkOptions -cd $outDirArg "$dir\main.tex"
+    # Use subshell via cmd /c to cd and run latexmk reliably
+    $escapedStylePath = $stylePath -replace '\\', '/'
+    $escapedBuildDir = ($templateBuildDir -replace '\\', '/')
+    $escapedMainTex = ($mainTex -replace '\\', '/')
+    $escapedDir = ($dir -replace '\\', '/')
+
+    $latexArgs = $LatexmkOptions + @("-outdir=${escapedBuildDir}") + , "main.tex"
+
+    Push-Location $dir
+    try {
+        & latexmk @latexArgs
+    }
+    finally {
+        Pop-Location
+    }
 
     $pdf = Join-Path $templateBuildDir "main.pdf"
     $outputDir = Join-Path $ScriptDir "output"
