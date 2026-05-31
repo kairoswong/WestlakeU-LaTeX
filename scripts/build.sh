@@ -58,13 +58,15 @@ build_template() {
     export TEXINPUTS="${SCRIPT_DIR}/style//:${TEXINPUTS:-}"
 
     latexmk "${LATEXMK_OPTS[@]}" \
-        -cd "${dir}/main.tex" \
-        -outdir="${BUILD_DIR}/${name}"
+        -cd "${dir}" \
+        -outdir="${BUILD_DIR}/${name}" \
+        "main.tex"
 
     # Copy the final PDF to the output directory
     mkdir -p "${SCRIPT_DIR}/output"
-    if [[ -f "${BUILD_DIR}/${name}/main.pdf" ]]; then
-        cp "${BUILD_DIR}/${name}/main.pdf" "${SCRIPT_DIR}/output/${name}.pdf"
+    local pdf="${BUILD_DIR}/${name}/main.pdf"
+    if [[ -f "${pdf}" ]]; then
+        cp "${pdf}" "${SCRIPT_DIR}/output/${name}.pdf"
         ok "Created: ${SCRIPT_DIR}/output/${name}.pdf"
     else
         err "Failed to find ${BUILD_DIR}/${name}/main.pdf"

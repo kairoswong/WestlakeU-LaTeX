@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ScriptDir = (Get-Item $ScriptDir).Parent.FullName
-$BuildDir = Join-Path $ScriptDir "scripts/.build"
+$BuildDir = Join-Path $ScriptDir "scripts\.build"
 
 $LatexmkOptions = @(
     "-xelatex",
@@ -31,7 +31,7 @@ function Test-Prerequisites {
 }
 
 function Build-Template([string]$Name) {
-    $dir = Join-Path $ScriptDir "src" $Name
+    $dir = Join-Path (Join-Path $ScriptDir "src") $Name
     $mainTex = Join-Path $dir "main.tex"
     if (-not (Test-Path $mainTex)) {
         Write-Warn "Skipping '$Name': $mainTex not found."
@@ -43,7 +43,7 @@ function Build-Template([string]$Name) {
 
     Write-Info "Building $Name ..."
 
-    $env:TEXINPUTS = "$([System.IO.Path]::GetFullPath((Join-Path $ScriptDir 'style'))//;$env:TEXINPUTS"
+    $env:TEXINPUTS = "$([System.IO.Path]::GetFullPath((Join-Path $ScriptDir 'style')))//;$env:TEXINPUTS"
 
     $outDirArg = "-outdir=$($templateBuildDir -replace '\\', '/')"
     & latexmk @LatexmkOptions -cd $outDirArg "$dir\main.tex"
