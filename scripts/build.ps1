@@ -1,5 +1,5 @@
 param(
-    [ValidateSet("all", "report", "cover", "letter", "beamer", "poster", "clean")]
+    [ValidateSet("all", "report", "letter", "beamer", "poster", "clean")]
     [string]$Target = "all"
 )
 
@@ -113,10 +113,6 @@ switch ($Target) {
         Build-Template "report"
     }
     "letter" {
-        Test-Prerequisites
-        Build-Template "letter"
-    }
-    "cover" {
         Test-Prerequisites
         Build-Template "letter"
     }

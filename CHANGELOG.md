@@ -5,7 +5,7 @@ All notable changes to the WestlakeU-LaTeX templates are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [v1.0.1] — 2026-05-30
+## [v1.0.1] — 2026-06-01
 
 ### Added
 - Added `Makefile` with targets for all, report, beamer, poster, letter, clean, and help
@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Replaced ad-hoc conflict warnings with `\AtBeginDocument`-based generic macro system for reliable detection
 - Moved templates to `src/` directory and output PDFs to `output/` directory
 - Updated path references, build scripts, and README accordingly
+ - Removed `cover` build target alias
 
 
 ## [v1.0.0] — 2026-05-30
